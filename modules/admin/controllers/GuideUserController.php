@@ -7,12 +7,13 @@ use app\models\GuideUser;
 use app\models\GuideUserSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 
 /**
  * GuideUserController implements the CRUD actions for GuideUser model.
  */
-class GuideUserController extends Controller
+class GuideUserController extends adminController
 {
     public function behaviors()
     {

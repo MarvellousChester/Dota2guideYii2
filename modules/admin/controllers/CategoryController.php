@@ -7,12 +7,15 @@ use app\models\Category;
 use app\models\CategorySearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
+use yii\web\ForbiddenHttpException;
 use yii\filters\VerbFilter;
 
+use app\models\UploadForm;
+use yii\web\UploadedFile;
 /**
  * CategoryController implements the CRUD actions for Category model.
  */
-class CategoryController extends Controller
+class CategoryController extends adminController
 {
     public function behaviors()
     {
@@ -52,6 +55,7 @@ class CategoryController extends Controller
             'model' => $this->findModel($id),
         ]);
     }
+    
 
     /**
      * Creates a new Category model.
@@ -62,9 +66,28 @@ class CategoryController extends Controller
     {
         $model = new Category();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
+        if ($model->load(Yii::$app->request->post()))
+        {
+            $file = UploadedFile::getInstance($model, 'image');
+            if ($file && $file->tempName) 
+            {
+                $model->image_file = $file;
+                if ($model->validate(['image_file'])) 
+                {
+                    $dir = Yii::getAlias('uploads/category_img/');
+                    $fileName = $model->image_file->baseName . '.' . $model->image_file->extension;
+                    $model->image_file->saveAs($dir . $fileName);
+                    $model->image_file = $fileName; // без этого ошибка
+                    $model->image = $fileName;
+                }
+            }
+            if($model->save())
+            {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } 
+        else 
+        {
             return $this->render('create', [
                 'model' => $model,
             ]);
@@ -81,9 +104,30 @@ class CategoryController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
+        $current_image = $model->image;
+        if ($model->load(Yii::$app->request->post()))
+        {
+            $file = UploadedFile::getInstance($model, 'image');
+            if ($file && $file->tempName) 
+            {
+                $model->image_file = $file;
+                if ($model->validate(['image_file'])) 
+                {
+                    $dir = Yii::getAlias('uploads/category_img/');
+                    $fileName = $model->image_file->baseName . '.' . $model->image_file->extension;
+                    $model->image_file->saveAs($dir . $fileName);
+                    $model->image_file = $fileName; // без этого ошибка
+                    $model->image = $fileName;
+                }
+            }
+            if($model->save())
+            {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+
+        } 
+        else 
+        {
             return $this->render('update', [
                 'model' => $model,
             ]);
@@ -118,4 +162,5 @@ class CategoryController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+    
 }

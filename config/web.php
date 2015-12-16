@@ -22,7 +22,7 @@ $config = [
             'class' => 'yii\caching\FileCache',
         ],
         'user' => [
-            'identityClass' => 'app\models\User',
+            'identityClass' => 'app\models\GuideUser',
             'enableAutoLogin' => true,
         ],
         'errorHandler' => [
@@ -54,6 +54,14 @@ $config = [
             'enablePrettyUrl' => true,
             'rules' => [
             ],
+        ],
+        'authManager' => [
+            'class' => 'yii\rbac\PhpManager',
+            'assignmentFile' => '@app/rbac/assignments.php',
+            'defaultRoles' => ['admin', 'user'],
+        ],
+        'security' => [
+            'passwordHashStrategy' => 'password_hash',
         ],
     ],
     

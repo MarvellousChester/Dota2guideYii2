@@ -27,6 +27,18 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'title',
+            [
+                'attribute' => 'image',
+                'label' => 'Icon',
+                'format' => 'raw',
+                'value' => function($data)
+                {
+                    $height = 24;
+                    $width = 24;
+                    return $data->getImage($height, $width);
+                },
+                'filter' => false,
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -7,7 +7,7 @@ use yii\grid\GridView;
 /* @var $searchModel app\models\GuideUserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Guide Users';
+$this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="guide-user-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Guide User', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -28,11 +28,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'id',
             'username',
             'email:email',
-            'password',
+            //'password',
             'fullname',
-            // 'created',
-            // 'ban',
-            // 'role',
+             'created',
+             'ban',
+             'role',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

@@ -30,6 +30,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'title',
+            [
+                'label' => 'Icon',
+                'format' => 'raw',
+                'value' => $model->getImage(24, 24),
+            ],
         ],
     ]) ?>
 

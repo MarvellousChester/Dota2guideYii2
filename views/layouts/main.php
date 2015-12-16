@@ -8,6 +8,7 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\models\GuideSettingMainpage;
 
 AppAsset::register($this);
 ?>
@@ -25,21 +26,29 @@ AppAsset::register($this);
 <?php $this->beginBody() ?>
 
 <div class="wrap">
+    
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => GuideSettingMainpage::getSettings()->getLogo(130, 30),
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
+            'style' => 'min-height: 60px; height: auto',
         ],
-    ]);
-    echo Nav::widget([
+        
+    ]);?>
+    <div class="contacts">
+        <p> Tel: <?=GuideSettingMainpage::getSettings()->tel?></p>
+        <p> E-mail: <?=GuideSettingMainpage::getSettings()->email?></p>
+    </div>
+    <?php echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
+            ['label' => 'Blog', 'url' => ['/site/blog?category=']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
-            ['label' => 'Admin', 'url' => ['/admin/']],
+            ['label' => 'Admin', 'visible' => Yii::$app->user->can('admin'), 'url' => ['/admin/mainpage']],
             Yii::$app->user->isGuest ?
                 ['label' => 'Login', 'url' => ['/site/login']] :
                 [
@@ -47,10 +56,18 @@ AppAsset::register($this);
                     'url' => ['/site/logout'],
                     'linkOptions' => ['data-method' => 'post']
                 ],
+            Yii::$app->user->isGuest ?
+            ['label' => 'Register', 'url' => ['/site/registration']] :
+            [
+                'label' => 'My cabinet',
+                'url' => ['/profile/view?id='.Yii::$app->user->identity->id],
+            ],
         ],
-    ]);
-    NavBar::end();
-    ?>
+    ]); ?>
+    <div class="welcome-msg">
+        <p> Weclome, <?php echo Yii::$app->user->isGuest ? 'Guest' : Yii::$app->user->identity->username ?>!</p>
+    </div>
+    <?php NavBar::end();?>
 
     <div class="container">
         <?= Breadcrumbs::widget([
@@ -62,9 +79,21 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <ul>
+        <li>
+            <div>
+                <p><?= GuideSettingMainpage::getSettings()->footer_text ?></p>
+                <p">&copy; My Company <?= date('Y') ?></p>
+            </div>
+        </li>
+        <li class="center">
+            <div>
+                <p><?= GuideSettingMainpage::getSettings()->getLogo(130, 30) ?></p>
+                <p><?= Yii::powered() ?></p>
+            </div>
+        </li>
+        <li><div class="contacts"><p>Tel: <?=GuideSettingMainpage::getSettings()->tel?></p> <p>E-mail: <?=GuideSettingMainpage::getSettings()->email?></p></div></li>
+        </ul>
     </div>
 </footer>
 
